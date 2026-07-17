@@ -1,0 +1,46 @@
+{% extends 'cnu/layout.html' %}
+{% load static %}
+{% block title %}
+    {{ publicatie.titlu }}
+{% endblock %}
+
+{% block body %}
+<div class="layout-container">
+    <div class="page-header bg-warning bg-gradient py-4 shadow-sm">
+        <div class="container d-flex flex-column gap-2">
+            <small class="text-dark">← <a href="{% url 'publicatii' %}" class="text-decoration-none text-dark fw-semibold">Înapoi la publicatii</a></small>
+            <h1 class="page-title text-dark fw-bold">{{ publicatie.titlu }}</h1>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="card shadow-lg border-0 p-4">
+            {% if publicatie.imagine %}
+                <img src="{{ publicatie.imagine.url }}" alt="Imagine publicatie"
+                     class="img-fluid rounded mb-4" style="max-height: 450px; object-fit: cover; width: 100%;">
+            {% endif %}
+
+            <div class="d-flex justify-content-between align-items-center mb-3 text-muted small flex-wrap">
+                <div>
+                    <i class="bi bi-person"></i> <strong>{{ publicatie.username }}</strong>
+                    &nbsp;|&nbsp;
+                    <i class="fas fa-calendar-alt"></i> {{ publicatie.data_publicare|date:"d M Y" }}
+                </div>
+                <div>
+                    👁️ {{ publicatie.views }} vizualizări
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="mb-4 content" style="line-height: 1.7;">
+                {{ publicatie.continut|safe }}
+            </div>
+
+            <div class="text-end">
+                <a href="{% url 'publicatii' %}" class="btn btn-outline-secondary">← Înapoi la publicatii</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

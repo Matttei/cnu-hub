@@ -1,0 +1,25 @@
+{% extends 'cnu/layout.html' %}
+{% load static %}
+{% block title %}
+    Personal Didactic
+{% endblock %}
+{% block body %}
+<div class="layout-container" style="width: 95%;">
+    {% for subject, members in categories %}
+        <div class="section-title-staff w-100">{{ subject }}</div>
+        <div class="staff-grid">
+            {% for prof in members %}
+            <div class="staff-card">
+                <div class="staff-img-container">
+                    <img class="staff-img img-fluid" src="{% static 'cnu/assets/prof.png' %}" alt="{{ prof }}">
+                </div>
+                <div class="staff-info">
+                    <div class="staff-name">{{ prof }}</div>
+                    <div class="staff-role">{% if prof == 'Consilier Georgeta FUNARU' %}{% else %}Titular{% endif %}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

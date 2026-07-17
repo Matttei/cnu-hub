@@ -1,0 +1,122 @@
+{% extends 'cnu/layout.html' %}
+{% load static %}
+{% block title %}
+    Calendar
+{% endblock %}
+{% block body %}
+<div class="layout-container">
+    <h1 class="text-center mb-5">Evenimente - Colegiul Național "Unirea" Turnu Măgurele</h1>
+    
+    <div class="event-tab">
+
+        <!-- Active Events -->
+        <div class="active-events mt-4">
+            <div class="section-header-events">
+                <h4>Evenimente Active</h4>
+            </div>
+            {% if active_events %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {% for event in active_events %}
+                <div class="event-card active">
+                    <div class="event-body">
+                        <div class="event-header">
+                            <div class="event-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="event-info">
+                                <h5 class="event-title">{{ event.title }}</h5>
+                                <span class="event-status status-active">
+                                    <i class="fas fa-circle"></i>
+                                    Activ
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <p class="event-description">
+                            {{ event.description }}
+                        </p>
+                        
+                        <div class="event-meta d-flex justify-content-between">
+                            <div class="event-date">
+                                <div class="date-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="date-info">
+                                    <div class="date-range">{{ event.startDateTime|date:"d M Y H:i" }} – {{ event.endDateTime|date:"d M Y H:i" }}</div>
+                                    <div class="date-label">Perioada desfășurare</div>
+                                </div>
+                            </div>
+                            
+                            <div class="event-class">
+                                <span class="class-badge">
+                                    <i class="fas fa-users"></i>
+                                    Clasa: {{ event.get_classes_display }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">Nu există evenimente active.</p>
+            {% endif %}
+        </div>
+
+        <!-- Expired Events -->
+        <div class="past-events mt-5">
+            <div class="section-header-events expired mr-2">
+                <h4>Ultimele Evenimente</h4>
+            </div>
+            {% if expired_events %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {% for event in expired_events %}
+                <div class="event-card expired">
+                    <div class="event-body">
+                        <div class="event-header">
+                            <div class="event-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="event-info">
+                                <h5 class="event-title">{{ event.title }}</h5>
+                                <span class="event-status status-active">
+                                    <i class="fas fa-circle"></i>
+                                    Inactiv
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <p class="event-description">
+                            {{ event.description }}
+                        </p>
+                        
+                        <div class="event-meta d-flex justify-content-between">
+                            <div class="event-date">
+                                <div class="date-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="date-info">
+                                    <div class="date-range">{{ event.startDateTime|date:"d M Y H:i" }} – {{ event.endDateTime|date:"d M Y H:i" }}</div>
+                                    <div class="date-label">Perioada desfășurare</div>
+                                </div>
+                            </div>
+                            
+                            <div class="event-class">
+                                <span class="class-badge">
+                                    <i class="fas fa-users"></i>
+                                    Clasa: {{ event.get_classes_display }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">Nu există evenimente trecute.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

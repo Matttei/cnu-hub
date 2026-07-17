@@ -1,0 +1,94 @@
+{% extends 'cnu/layout.html' %}
+{% load static %}
+{% block title %}
+    Acasă
+{% endblock %}
+{% block body %}
+
+<!-- HERO -->
+<section class="hero-section">
+    <div class="content">
+        <h1 class="display-5 fw-bold">Colegiul Național „Unirea”</h1>
+        <p class="lead mb-4">Excelență prin educație, tradiție și performanță</p>
+        <a href="{% url 'despre' %}" class="btn btn-warning btn-lg px-4 more-btn">Află mai mult</a>
+    </div>
+</section>
+
+<!-- LATEST EVENTS / NEWS -->
+<section class="events-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-badge">
+                <i class="bi bi-calendar-event me-2"></i>
+                Actualități
+            </div>
+            <h2 class="section-title">Ultimele Evenimente</h2>
+            <p class="section-subtitle">Urmărește cele mai recente știri și evenimente din viața școlii</p>
+        </div>
+        
+        <div class="events-grid">
+            {% if all_pinned %}
+                {% for event in all_pinned %}
+                <div class="event-card event-card-pinned" data-delay="{{ forloop.counter0|floatformat:0 }}">
+                    <a href="{% url 'publicatii' %}?scroll={{event.id}}" class="event-link">
+                        <div class="event-icon">
+                            <i class="bi bi-pin-angle-fill"></i>
+                        </div>
+                        <div class="event-content">
+                            <div class="event-type">Anunț important</div>
+                            <h3 class="event-title">{{ event.titlu }}</h3>
+                        </div>
+                        <div class="event-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            {% endif %}
+            
+            {% if latest_events %}
+                {% for event in latest_events|slice:":3" %}
+                <div class="event-card" data-delay="{{ forloop.counter0|add:all_pinned|length|floatformat:0 }}">
+                    <a href="{% url 'calendar' %}" class="event-link">
+                        <div class="event-icon">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <div class="event-content">
+                            <div class="event-type">Eveniment</div>
+                            <h3 class="event-title">{{ event.title }}</h3>
+                        </div>
+                        <div class="event-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            {% endif %}
+            
+            {% if not all_pinned and not latest_events %}
+                <div class="no-events">
+                    <div class="no-events-icon">
+                        <i class="bi bi-calendar-x"></i>
+                    </div>
+                    <p class="no-events-text">Nu există evenimente recente.</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if all_pinned or latest_events %}
+        <div class="section-footer">
+            <a href="{% url 'publicatii' %}" class="btn btn-outline-primary">
+                <i class="bi bi-newspaper me-2"></i>
+                Vezi toate publicațiile
+            </a>
+            <a href="{% url 'calendar' %}" class="btn btn-outline-primary">
+                <i class="bi bi-calendar3 me-2"></i>
+                Vezi calendarul complet
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+
+{% endblock %}

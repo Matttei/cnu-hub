@@ -1,0 +1,17 @@
+{% extends 'cnu/layout.html' %}
+{% load static %}
+
+{% block title %}
+    Eroare 404 - Pagina nu a fost găsită
+{% endblock %}
+
+{% block body %}
+    <div class="layout-container" style="text-align: center; padding: 100px 20px;">
+        <img src="{% static 'cnu/assets/404.png' %}" alt="Eroare 404" style="max-width: 300px; margin-bottom: 30px;" class="img-fluid">
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Oops! Pagina nu a fost găsită</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 30px;">
+            Se pare că pagina căutată nu există sau a fost mutată.
+        </p>
+        <a href="{% url 'index' %}" class="btn btn-primary">Înapoi la pagina principală</a>
+    </div>
+{% endblock %}

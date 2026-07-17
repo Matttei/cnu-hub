@@ -1,0 +1,169 @@
+{% extends 'cnu/layout.html' %}
+{% load static %}
+{% block title %}
+    Despre
+{% endblock %}
+{% block body %}
+<link rel="stylesheet" href="{% static 'cnu/css/about.css' %}")>
+<div class="layout-container">
+    <!-- Hero Section -->
+    <div class="about-hero">
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1 class="hero-title">Despre Liceul Nostru</h1>
+                <p class="hero-subtitle">Construim viitorul prin educație de calitate și valori autentice</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="about-section container">
+        <!-- Introduction -->
+        <div class="intro-section">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="section-title">Misiunea Noastră</h2>
+                            <p class="lead-text">De peste <span style="color: #f6d365;">135</span> de ani, liceul nostru formează generații de tineri pregătiți să facă față provocărilor lumii <span style="color: #f6d365;">moderne</span>. Combinăm tradiția academică cu inovația <span style="color: #f6d365;">educațională</span>, oferind fiecărui elev șansa de a-și descoperi și valorifica <span style="color: #f6d365;">potențialul.</span></p>
+                    <p>Credem că educația înseamnă mai mult decât transmiterea de cunoștințe - înseamnă dezvoltarea <span style="color: #f6d365;">gândirii</span> critice, a creativității și a valorilor care vor ghida elevii pe tot parcursul vieții.</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="550" data-suffix="+">0</div>
+                            <div class="stat-label">Elevi activi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="32">0</div>
+                            <div class="stat-label">Profesori dedicați</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="95" data-suffix="%">0</div>
+                            <div class="stat-label">Rata de promovare</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="30">0</div>
+                            <div class="stat-label">Activități extracurriculare</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Cards -->
+        <div class="features-section">
+            <h2 class="section-title text-center">Ce Ne Face Speciali</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3 card-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <img src="{% static 'cnu/assets/educatie.jpg' %}" alt="Educație Modernă" class="feature-image">
+                        <div class="feature-content">
+                            <h5>Educație Modernă</h5>
+                            <p>Săli interactive, laboratoare moderne și tehnologie în fiecare clasă pentru o experiență educațională completă.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 card-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <img src="{% static 'cnu/assets/liceu2.jpg' %}" alt="Profesori Dedicați" class="feature-image">
+                        <div class="feature-content">
+                            <h5>Profesori Dedicați</h5>
+                            <p>Echipă de cadre didactice pasionate, cu experiență vastă și mereu aproape de nevoile elevilor.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 card-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <img src="{% static 'cnu/assets/activitati1.jpg' %}" alt="Activități Diverse" class="feature-image">
+                        <div class="feature-content">
+                            <h5>Activități Diverse</h5>
+                            <p>Cluburi tematice, olimpiade școlare, excursii educaționale și programe de schimb internațional.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 card-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <img src="{% static 'cnu/assets/rezultate.jpg' %}" alt="Rezultate Remarcabile" class="feature-image">
+                        <div class="feature-content">
+                            <h5>Rezultate Remarcabile</h5>
+                            <p>Generații de absolvenți de succes care fac performanță în țară și în străinătate.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Values Section -->
+        <div class="values-section">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="section-title">Valorile Noastre</h2>
+                    <div class="values-grid">
+                        <div class="value-item">
+                            <h6>Excelență</h6>
+                            <p>Căutăm mereu să depășim standardele și să oferim educație de cea mai înaltă calitate.</p>
+                            <img class="img img-fluid smiley-face" src="{% static 'cnu/assets/smiley_face.png' %}">
+                        </div>
+                        <div class="value-item">
+                            <h6>Respect</h6>
+                            <p>Cultivăm un mediu de respect reciproc între elevi, profesori și comunitatea școlară.</p>
+                            <img class="img img-fluid smiley-face2" src="{% static 'cnu/assets/smiley_face.png' %}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll('.stat-number');
+
+    const animateCount = (el, target) => {
+        let count = 0;
+        const speed = 500; 
+        const suffix = el.dataset.suffix || '';
+        const update = () => {
+            const increment = target / speed;
+            count += increment;
+
+            if (count < target) {
+                el.textContent = Math.ceil(count) + suffix;
+                requestAnimationFrame(update);
+            } else {
+                el.textContent = target + suffix;
+            }
+        };
+
+        update();
+    };
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    if (!counter.classList.contains('counted')) {
+                        counter.classList.add('counted');
+                        animateCount(counter, target);
+                    }
+                });
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => observer.observe(counter));
+});
+</script>
+{% endblock %}
