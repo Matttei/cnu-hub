@@ -14,7 +14,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib import messages
 from .forms import AnuntForm
-from .models import Events, ContactForm, Anunt, ChatSession
+from .models import Events, ContactForm, Anunt, ChatSession, Teacher
 from .ai import ask_ai
 import resend
 
@@ -25,18 +25,34 @@ resend.api_key = settings.RESEND_API_KEY
 def index(request):
     now = timezone.now()
     seven_days_ago = now - timedelta(days=7)
-    all_events = Events.objects.all()
-    latest_events = []
-    all_pinned = Anunt.objects.filter(Important=True).order_by('-data_publicare')[:3]
-    if (len(all_pinned) == 3):
-        latest_events = []
-    else:
-        latest_events = Events.objects.filter(startDateTime__gte=seven_days_ago)[:3]  
+
+    current_events = []
+
+    all_pinned = Anunt.objects.filter(
+        Important=True
+    ).order_by('-data_publicare')[:3]
+
+    if len(all_pinned) < 3:
+
+        needed = 3 - len(all_pinned)
+
+        events = Events.objects.filter(
+            startDateTime__gte=seven_days_ago
+        ).order_by('startDateTime')
+
+
+        for event in events:
+            if event.endDateTime >= now:
+                current_events.append(event)
+
+            if len(current_events) == needed:
+                break
+
+
     return render(request, 'cnu/index.html', {
         'all_pinned': all_pinned,
-        'latest_events': latest_events
+        'latest_events': current_events
     })
-
 
 def calendar(request):
     current_date = timezone.now()
@@ -220,24 +236,19 @@ def bacalaureat(request):
 
 
 def personal_didactic(request):
-    categories = [
-        ('Limba și literatura română', ['Prof. Mariana Adelina ELS', 'Prof. Elena Daniela NICA', 'Prof. Elena ȘERBĂNESCU', 'Prof. Monica CRISTEA']),
-        ('Limba engleză', ['Prof. Crina Ionela DORCEA', 'Prof. Daniela Sonia PLOCON', 'Prof. Răzvan Delcea VASILE']),
-        ('Limba franceză', ['Prof. Andreea Cristina BĂLAȘA', 'Prof. Mircea TATARICI', 'Prof. Geanina Petruța SAVA']),
-        ('Matematică', ['Prof. Florin ORIȚĂ', 'Prof. Irina PETREANU', 'Prof. Mariana TUDOR', 'Prof. Rodica Argentina IONESCU']),
-        ('Fizică', ['Prof. Mihai CĂLIN', 'Prof. Marinela DIEACONU']),
-        ('Chimie', ['Prof. Ioan Fernand CARAGEA', 'Prof. Nicoleta Claudia DRĂGULEASA']),
-        ('Biologie', ['Prof. Daniela GRASU', 'Prof. Mihaela NEACȘU']),
-        ('Istorie', ['Prof. Vasile MĂRCUȘU', 'Prof. Ștefănel VIPIE', 'Prof. Ramona Elena STĂNESCU']),
-        ('Geografie', ['Prof. Violeta DIMA', 'Prof. Daniela Rodica VASILE']),
-        ('Științe socio-umane', ['Prof. Nicolae Alin ALEXE', 'Consilier Georgeta FUNARU']),
-        ('Educație vizuală', ['Prof. Ovidiu Nicolae ORBEȘTEANU']),
-        ('Educație fizică și sport', ['Prof. Mădălin BARBU']),
-        ('Informatică și TIC', ['Prof. Miruna GRUIA', 'Prof. Nicoleta MARINESCU', 'Prof. Gabriel DEFTA']),
-        ('Religie', ['Prof. Constantin COJOACĂ', 'Prof. Gabriel DEFTA']),
-    ]
-    return render(request, 'cnu/personal_didactic.html', {
-        'categories': categories,
+    categories = []
+
+    for subject, _ in Teacher.SUBJECT_CHOICES:
+        teachers = Teacher.objects.filter(subject=subject)
+
+        if teachers.exists():
+            categories.append({
+                "name": subject,
+                "teachers": teachers
+            })
+
+    return render(request, "cnu/personal_didactic.html", {
+        "categories": categories
     })
 
 def personal_auxiliar(request):
@@ -309,4 +320,35 @@ def chatbot_message(request):
     session.save()
     return JsonResponse({
         "response": response_data["answer"]
+    })
+
+from .search import SearchEngine
+
+def search_api(request):
+    query = request.GET.get("q", "")
+    engine = SearchEngine()
+
+    results = engine.search(query)
+    return JsonResponse({
+        "results": results
+    })
+
+
+def search_page(request):
+    query = request.GET.get("q", "")
+
+    engine = SearchEngine()
+
+    results = {
+        "profesori": [],
+        "anunturi": [],
+        "evenimente": []
+    }
+
+    if query:
+        results = engine.search(query)
+
+    return render(request, "cnu/search.html", {
+        "query": query,
+        "results": results
     })

@@ -31,6 +31,98 @@ document.addEventListener('DOMContentLoaded', function () {
             targetElement.classList.add('highlight-animation');
         }
     }
+    const searchBtn = document.getElementById("searchBtn");
+    const searchForm = document.getElementById("searchForm");
+    const searchInput = document.getElementById("searchInput");
+
+    if (searchBtn && searchForm && searchInput) {
+
+        searchBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+
+            searchForm.classList.toggle("active");
+            searchBtn.classList.toggle("hide");
+
+            if (searchForm.classList.contains("active")) {
+                searchInput.focus();
+            }
+        });
+
+
+        searchInput.addEventListener("keydown", function(e) {
+
+            if (e.key === "Escape") {
+                searchForm.classList.remove("active");
+                searchBtn.classList.remove("hide");
+                searchInput.value = "";
+            }
+
+        });
+
+
+        document.addEventListener("click", function(e) {
+
+            if (
+                !searchForm.contains(e.target) &&
+                !searchBtn.contains(e.target)
+            ) {
+                searchForm.classList.remove("active");
+                searchBtn.classList.remove("hide");
+            }
+
+        });
+
+    }
+    // Mobile
+    const mobileSearchBtn = document.getElementById("mobileSearchBtn");
+    const mobileSearchForm = document.getElementById("mobileSearchForm");
+    const mobileSearchInput = document.getElementById("mobileSearchInput");
+
+
+    if(mobileSearchBtn){
+
+        mobileSearchBtn.addEventListener("click", function(e){
+
+            e.preventDefault();
+
+            mobileSearchForm.classList.toggle("active");
+            mobileSearchBtn.classList.toggle("hide");
+
+
+            if(mobileSearchForm.classList.contains("active")){
+                mobileSearchInput.focus();
+            }
+
+        });
+
+
+        mobileSearchInput.addEventListener("keydown", function(e){
+
+            if(e.key === "Escape"){
+
+                mobileSearchForm.classList.remove("active");
+                mobileSearchBtn.classList.remove("hide");
+
+            }
+
+        });
+
+
+        document.addEventListener("click", function(e){
+
+            if(
+                !mobileSearchForm.contains(e.target) &&
+                !mobileSearchBtn.contains(e.target)
+            ){
+
+                mobileSearchForm.classList.remove("active");
+                mobileSearchBtn.classList.remove("hide");
+
+            }
+
+        });
+
+    }
 
     const cards = document.querySelectorAll(".card-grid");
     const values = document.querySelectorAll(".value-item");

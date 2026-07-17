@@ -83,3 +83,33 @@ class ChatSession(models.Model):
     data = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return (f"{self.username} a solicitat asistenta AI la {self.data.strftime('%H:%M:%S')} cu titlul {self.titlu} - ID: {self.id} , {self.categorie}" f"{' [IMPORTANT]' if self.important else ''}")
+
+class Teacher(models.Model):
+    SUBJECT_CHOICES = [
+        ("Limba și literatura română", "Limba și literatura română"),
+        ("Limba engleză", "Limba engleză"),
+        ("Limba franceză", "Limba franceză"),
+        ("Matematică", "Matematică"),
+        ("Fizică", "Fizică"),
+        ("Chimie", "Chimie"),
+        ("Biologie", "Biologie"),
+        ("Istorie", "Istorie"),
+        ("Geografie", "Geografie"),
+        ("Științe socio-umane", "Științe socio-umane"),
+        ("Educație vizuală", "Educație vizuală"),
+        ("Educație fizică și sport", "Educație fizică și sport"),
+        ("Informatică și TIC", "Informatică și TIC"),
+        ("Religie", "Religie"),
+    ]
+    PROF_ROLE = [
+        ("Titular", "TITULAR"),
+        (" ", " ")
+    ]
+    name = models.CharField(max_length=150)
+    subject = models.CharField(max_length=100, choices=SUBJECT_CHOICES)
+    role = models.CharField(choices=PROF_ROLE, default="Titular")
+    class Meta:
+        ordering = ["subject", "name"]
+
+    def __str__(self):
+        return self.name

@@ -125,12 +125,28 @@ grecaptcha.ready(function() {
                         </div>
                     </ul>
                 </div>
-
+                
                 <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
-
+                
                 {% if user.is_authenticated and user.is_staff %}
                 <a class="nav-link {% if request.path == '/admin_cnu/' %} active {% endif %}" href="{% url 'cnu_admin' %}">Admin</a>
                 {% endif %}
+                <div class="search-container">
+
+                    <button class="nav-link search-btn" id="searchBtn" title="Căutare">
+                        <i class="bi bi-search"></i>
+                    </button>
+
+                    <form class="search-overlay" id="searchForm" action="{% url 'search' %}" method="get">
+                        <input 
+                            type="text" 
+                            name="q"
+                            id="searchInput"
+                            placeholder="Caută..."
+                            autocomplete="off">
+                    </form>
+
+                </div>
             </div>
         </div>
     </nav>
@@ -151,6 +167,29 @@ grecaptcha.ready(function() {
                     <strong>CNU</strong>
                 </div>
             </a>
+            <!-- Mobile Search -->
+            <div class="mobile-search-container">
+
+                <button class="mobile-search-btn" id="mobileSearchBtn">
+                    <i class="bi bi-search"></i>
+                </button>
+
+                <form 
+                    class="mobile-search-overlay" 
+                    id="mobileSearchForm"
+                    action="{% url 'search' %}" 
+                    method="get">
+
+                    <input 
+                        type="text"
+                        name="q"
+                        id="mobileSearchInput"
+                        placeholder="Caută..."
+                        autocomplete="off">
+
+                </form>
+
+            </div>
             <!-- Mobile Menu Toggle -->
             <button class="mobile-menu-toggler" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
                 <i class="bi bi-list"></i>

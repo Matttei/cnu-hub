@@ -25,5 +25,7 @@ urlpatterns = [
     path('cereri/', views.cereri_tip, name='cereri'),
     path('burse/', views.burse, name='burse'),
     path("chatbot/", views.chatbot, name="chatbot"),
-    path("chatbot/message/", views.chatbot_message, name="chatbot_message")
+    path("chatbot/message/", views.chatbot_message, name="chatbot_message"),
+    path("api/search/", views.search_api, name="search_api"),
+    path("search/", views.search_page, name="search"),
 ]

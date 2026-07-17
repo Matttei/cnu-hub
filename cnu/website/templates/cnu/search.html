@@ -1,0 +1,278 @@
+{% extends 'cnu/layout.html' %}
+{% load static %}
+
+{% block title %}
+    Căutare
+{% endblock %}
+
+{% block body %}
+
+<div class="layout-container" style="width:95%; padding:80px 20px;">
+
+    <h1 class="text-center mb-5">
+        Rezultate pentru "{{ query }}"
+    </h1>
+
+
+    <!-- PROFESORI -->
+    {% if results.profesori %}
+
+    <div class="section-title-staff w-100">
+        Profesori
+    </div>
+
+
+    <div class="staff-grid">
+
+        {% for prof in results.profesori %}
+
+        <div class="staff-card">
+
+            <div class="staff-img-container">
+                <img 
+                    class="staff-img img-fluid"
+                    src="{% static 'cnu/assets/prof.png' %}"
+                    alt="{{ prof.title }}">
+            </div>
+
+
+            <div class="staff-info">
+
+                <div class="staff-name">
+                    {{ prof.title }}
+                </div>
+
+                <div class="staff-role">
+                    {{ prof.content }}
+                </div>
+
+                {% if prof.role %}
+                <div class="staff-role">
+                    {{ prof.role }}
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+
+
+
+    <!-- PUBLICATII -->
+    {% if results.anunturi %}
+
+    <div class="section-title-staff w-100 mt-5">
+        Publicații
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+
+        {% for anunt in results.anunturi %}
+
+        <div class="col">
+
+            <div class="card shadow-lg border-0 h-100">
+
+
+                <div class="card-body">
+
+
+                    <h5 class="fw-bold">
+                        {{ anunt.title }}
+                    </h5>
+
+
+                    <p class="text-muted">
+                        {{ anunt.content|safe|truncatechars:160 }}
+                    </p>
+
+
+                    <div class="small text-muted mb-3">
+                        Publicat de {{ anunt.username }}
+                    </div>
+
+
+                    <a href="{{ anunt.url }}"
+                       class="btn btn-warning">
+
+                        Vezi publicația
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+    {% endif %}
+
+
+
+
+
+    <!-- EVENIMENTE -->
+    {% if results.evenimente %}
+
+
+    <div class="section-title-staff w-100 mt-5">
+        Evenimente
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+
+        {% for event in results.evenimente %}
+
+
+        <div class="event-card active">
+
+
+            <div class="event-body">
+
+
+                <div class="event-header">
+
+
+                    <div class="event-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+
+
+                    <div class="event-info">
+
+                        <h5 class="event-title">
+                            {{ event.title }}
+                        </h5>
+
+
+                        <span class="event-status status-active">
+
+                            <i class="fas fa-circle"></i>
+
+                            Eveniment
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <p class="event-description">
+                    {{ event.content|truncatechars:150 }}
+                </p>
+
+
+                {% if event.date %}
+                <div class="event-meta">
+
+                    <div class="date-info">
+
+                        <div class="date-range">
+                            {{ event.date|date:"d M Y H:i" }}
+                        </div>
+
+                        <div class="date-label">
+                            Perioada desfășurare
+                        </div>
+
+                    </div>
+
+                </div>
+                {% endif %}
+
+
+
+                {% if event.class %}
+                <span class="class-badge mt-2">
+
+                    <i class="fas fa-users"></i>
+
+                    Clasa: {{ event.class }}
+
+                </span>
+                {% endif %}
+
+
+
+                <div class="mt-3">
+
+                    <a href="{{ event.url }}"
+                       class="btn btn-outline-primary">
+
+                        Vezi calendar
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+    {% endif %}
+
+
+
+
+
+    <!-- NICIUN REZULTAT -->
+
+    {% if not results.profesori and not results.anunturi and not results.evenimente %}
+
+
+    <div class="text-center mt-5">
+
+
+        <h3>
+            Nu s-au găsit rezultate
+        </h3>
+
+
+        <p class="text-muted">
+            Încearcă să cauți alt termen.
+        </p>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+
+</div>
+
+
+{% endblock %}
