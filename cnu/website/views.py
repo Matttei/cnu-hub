@@ -16,6 +16,10 @@ from django.contrib import messages
 from .forms import AnuntForm
 from .models import Events, ContactForm, Anunt, ChatSession
 from .ai import ask_ai
+import resend
+
+resend.api_key = settings.RESEND_API_KEY
+
 # Create your views here.
 
 def index(request):
@@ -61,14 +65,6 @@ def despre(request):
 def admitere(request):
     return render(request, 'cnu/admitere.html')
 
-import logging
-
-import logging
-import socket
-import smtplib
-import traceback
-
-logger = logging.getLogger(__name__)
 
 def contact_form(request):
     if request.method != "POST":
@@ -78,80 +74,41 @@ def contact_form(request):
     email = request.POST.get("email")
     message = request.POST.get("message")
 
-    logger.warning("=== CONTACT FORM START ===")
-
-    try:
-        ContactForm.objects.create(
-            name=name,
-            email=email,
-            message=message,
-        )
-        logger.warning("Saved to database.")
-    except Exception:
-        logger.exception("Database error")
-        raise
+    ContactForm.objects.create(
+        name=name,
+        email=email,
+        message=message,
+    )
 
     subject = f"Mesaj nou de la {name}"
+
     body = f"""
 Ai primit un mesaj nou de pe formularul de contact.
 
+Nume: {name}
 Email: {email}
+
 Mesaj:
 {message}
 """
 
-    logger.warning(f"EMAIL_BACKEND = {settings.EMAIL_BACKEND}")
-    logger.warning(f"EMAIL_HOST = {settings.EMAIL_HOST}")
-    logger.warning(f"EMAIL_PORT = {settings.EMAIL_PORT}")
-    logger.warning(f"EMAIL_TLS = {settings.EMAIL_USE_TLS}")
-    logger.warning(f"EMAIL_USER = {settings.EMAIL_HOST_USER}")
-    logger.warning(f"PASSWORD SET = {bool(settings.EMAIL_HOST_PASSWORD)}")
-
-    # Test DNS
     try:
-        ip = socket.gethostbyname(settings.EMAIL_HOST)
-        logger.warning(f"SMTP resolves to {ip}")
-    except Exception:
-        logger.exception("DNS lookup failed")
+        resend.Emails.send({
+            "from": "onboarding@resend.dev",  # pentru teste
+            "to": ["dorceamatei010@gmail.com"],
+            "subject": subject,
+            "text": body,
+        })
 
-    # Test TCP
-    try:
-        sock = socket.create_connection(
-            (settings.EMAIL_HOST, settings.EMAIL_PORT),
-            timeout=10,
-        )
-        logger.warning("TCP connection OK")
-        sock.close()
-    except Exception:
-        logger.exception("TCP connection FAILED")
+        return JsonResponse({
+            "success": True,
+            "message": "Mesajul a fost trimis cu succes! ✅"
+        })
 
-    try:
-        logger.warning("Calling send_mail()...")
-
-        send_mail(
-            subject,
-            body,
-            settings.EMAIL_HOST_USER,
-            ["mateidorcea@gmail.com"],
-            fail_silently=False,
-        )
-
-        logger.warning("send_mail() finished OK")
-
-    except smtplib.SMTPException:
-        logger.exception("SMTP Exception")
-        return JsonResponse({"error": "SMTP Exception"}, status=500)
-
-    except Exception:
-        logger.exception("Unknown exception")
-        return JsonResponse({"error": traceback.format_exc()}, status=500)
-
-    logger.warning("=== CONTACT FORM END ===")
-
-    return JsonResponse({
-        "success": True,
-        "message": "Mesaj trimis!"
-    })
+    except Exception as e:
+        return JsonResponse({
+            "error": str(e)
+        }, status=500)
 
 
 def orar(request):

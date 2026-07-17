@@ -216,14 +216,7 @@ else:
         },
     }
 
-
-
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 TAVILY_API_KEY = os.environ.get('TAVILY_API_KEY')
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
