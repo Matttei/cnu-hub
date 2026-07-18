@@ -2,7 +2,8 @@ from .models import Anunt, Events, Teacher
 from django.db.models import Q
 from django.urls import reverse
 import unicodedata
-
+import re
+BASE_URL = "http://127.0.0.1:8000"
 
 def normalize(text):
     text = unicodedata.normalize("NFD", text)
@@ -13,17 +14,29 @@ def normalize(text):
     return text.lower()
 
 
+def extract_keywords(query):
+    query = normalize(query)
+
+    words = re.findall(r"\w+", query)
+
+    stopwords = {
+        "cine", "este", "sunt", "care", "ce", "despre",
+        "profesor", "profesoara", "profesorul", "profesoarei",
+        "domnul", "doamna", "va", "imi", "spune", "un", "o",
+        "la", "din", "si", "cu", "de", "a", "al", "ale",
+        "pentru", "care", "cat", "cand", "unde"
+    }
+
+    return [w for w in words if w not in stopwords]
+
+
 class SearchEngine:
 
     def search_anunt(self, query):
         results = []
+        keywords = extract_keywords(query)
 
-        anunturi = Anunt.objects.filter(
-            Q(titlu__icontains=query) |
-            Q(continut__icontains=query)
-        )
-
-        query_normalized = normalize(query)
+        anunturi = Anunt.objects.all()
 
         for anunt in anunturi:
             score = 0
@@ -31,27 +44,27 @@ class SearchEngine:
             titlu = normalize(anunt.titlu)
             continut = normalize(anunt.continut)
 
-            if query_normalized in titlu:
-                score += 100
+            for word in keywords:
+                if word in titlu:
+                    score += 100
+                if word in continut:
+                    score += 20
 
-            if query_normalized in continut:
-                score += 20
-
-            results.append({
-                "title": anunt.titlu,
-                "content": anunt.continut,
-                "url": reverse("publicatie", args=[anunt.id]),
-                "type": "Publicatie",
-                "score": score
-            })
+            if score > 0:
+                results.append({
+                    "title": anunt.titlu,
+                    "content": anunt.continut,
+                    "url": reverse("publicatie", args=[anunt.id]),
+                    "type": "Publicatie",
+                    "score": score
+                })
 
         return results
 
 
     def search_teacher(self, query):
         results = []
-
-        query_normalized = normalize(query)
+        keywords = extract_keywords(query)
 
         teachers = Teacher.objects.all()
 
@@ -60,16 +73,15 @@ class SearchEngine:
             name = normalize(teacher.name)
             subject = normalize(teacher.subject)
 
-            if query_normalized in name or query_normalized in subject:
+            score = 0
 
-                score = 0
-
-                if query_normalized in name:
+            for word in keywords:
+                if word in name:
                     score += 100
-
-                if query_normalized in subject:
+                if word in subject:
                     score += 40
 
+            if score > 0:
                 results.append({
                     "title": teacher.name,
                     "content": teacher.subject,
@@ -83,13 +95,9 @@ class SearchEngine:
 
     def search_events(self, query):
         results = []
+        keywords = extract_keywords(query)
 
-        events = Events.objects.filter(
-            Q(title__icontains=query) |
-            Q(description__icontains=query)
-        )
-
-        query_normalized = normalize(query)
+        events = Events.objects.all()
 
         for event in events:
             score = 0
@@ -97,21 +105,24 @@ class SearchEngine:
             title = normalize(event.title)
             description = normalize(event.description)
 
-            if query_normalized in title:
-                score += 100
+            for word in keywords:
+                if word in title:
+                    score += 100
+                if word in description:
+                    score += 20
 
-            if query_normalized in description:
-                score += 20
+            if score > 0:
+                results.append({
+                    "title": event.title,
+                    "content": event.description,
+                    "url": reverse("calendar"),
+                    "startEvent": event.startDateTime, 
+                    "endEvent": event.endDateTime,
+                    "type": "Eveniment",
+                    "score": score,
+                })
 
-            results.append({
-                "title": event.title,
-                "content": event.description,
-                "url": reverse("calendar"),
-                "type": "Eveniment",
-                "score": score,
-            })
-
-        return results[:5]
+        return results
 
 
     def rank(self, results):
@@ -132,3 +143,36 @@ class SearchEngine:
             "profesori": self.rank(profesori)[:5],
             "evenimente": self.rank(evenimente)[:5],
         }
+
+    def build_context(self, query):
+        results = self.search(query)
+
+        context = ""
+
+        for categorie in results.values():
+            for item in categorie:
+
+                context += f"""
+    Tip: {item['type']}
+    Titlu: {item['title']}
+    Conținut:
+    {item['content']}
+    Link: {BASE_URL}{item['url']}
+    """
+
+                if item["type"] == "Eveniment":
+
+                    start = item["startEvent"]
+                    end = item["endEvent"]
+
+                    start = start.strftime("%d.%m.%Y %H:%M") if start else "Necunoscută"
+                    end = end.strftime("%d.%m.%Y %H:%M") if end else "Necunoscută"
+
+                    context += f"""
+    Data începerii: {start}
+    Data încheierii: {end}
+    """
+
+                context += "\n-------------------------\n"
+
+        return context

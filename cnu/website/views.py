@@ -283,7 +283,8 @@ def chatbot(request):
         name=data["name"],
         email=data["email"]
     )
-
+    print("RAW RESPONSE:")
+    print(ai_response)
     ai_data = json.loads(ai_response)
 
     session = ChatSession.objects.create(
@@ -301,26 +302,45 @@ def chatbot(request):
     })
 
 def chatbot_message(request):
+    try:
+        data = json.loads(request.body)
 
-    data = json.loads(request.body)
-    session = ChatSession.objects.get(pk=data["session_id"])
-    response = ask_ai(
-        prompt=data["content"],
-        category=data["category"],
-        name=data["name"],
-        email=data["email"]
-    )
-    response_data = json.loads(response)
-    session.categorie = response_data["category"]
-    session.important = response_data["important"]
-    session.titlu = response_data["title"]
-    session.email = response_data["email"]
-    session.continut += f'.\n\n {response_data["name"]}: '+ data["message"]
-    session.continut += ".\n\n AI: " + response_data["answer"]
-    session.save()
-    return JsonResponse({
-        "response": response_data["answer"]
-    })
+        print(data)
+
+        session = ChatSession.objects.get(pk=data["session_id"])
+
+        response = ask_ai(
+            prompt=data["content"],
+            category=data["category"],
+            name=data["name"],
+            email=data["email"]
+        )
+
+        print("RESPONSE:", response)
+
+        response_data = json.loads(response)
+
+        session.categorie = response_data["category"]
+        session.important = response_data["important"]
+        session.titlu = response_data["title"]
+        session.email = response_data["email"]
+
+        session.continut += f"\n\n{response_data['name']}: {data['message']}"
+        session.continut += f"\n\nAI: {response_data['answer']}"
+
+        session.save()
+
+        return JsonResponse({
+            "response": response_data["answer"]
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+
+        return JsonResponse({
+            "error": str(e)
+        }, status=500)
 
 from .search import SearchEngine
 

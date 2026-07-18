@@ -1083,7 +1083,15 @@ p {
     display:flex;
     justify-content:flex-start;
 }
-
+.message-content {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+.message-content a {
+    overflow-wrap: anywhere;
+    word-break: break-all;
+}
 .bot-message .message-content{
     background:#ffffff;
     color:#2d3436;
@@ -3639,7 +3647,7 @@ font-size: calc(1.5rem * var(--accessibility-font-scale)) !important;
     }
 }
 
-/* Extra small screens - single column */
+/* Extra small screens */
 @media (max-width: 480px) {
     .events-grid {
         grid-template-columns: 1fr;

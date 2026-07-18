@@ -114,7 +114,7 @@ function startChat(){
         addBotMessage("Cum te numești?");
     }, 2000);
 }
-function addBotMessage(text){
+function addBotMessage(text) {
     const message = document.createElement("div");
     message.classList.add("chat-message", "bot-message");
 
@@ -123,11 +123,10 @@ function addBotMessage(text){
             class="chat-bot-logo img-fluid"
             alt="AI"
             style="height: 32px; width: 32px;"
-            >
-             
+        >
 
         <div class="message-content">
-            ${text}
+            ${makeLinks(text)}
         </div>
     `;
 
@@ -254,4 +253,10 @@ function sendConversation(){
         showMessage(err);
     });
 
+}
+function makeLinks(text) {
+    return text.replace(
+        /(https?:\/\/[^\s]+)/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">Deschide pagina ↗</a>'
+    );
 }
