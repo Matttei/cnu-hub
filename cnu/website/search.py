@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.urls import reverse
 import unicodedata
 import re
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "https://cnu-hub.onrender.com/"
 
 def normalize(text):
     text = unicodedata.normalize("NFD", text)
