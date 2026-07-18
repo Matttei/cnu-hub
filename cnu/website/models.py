@@ -107,7 +107,7 @@ class Teacher(models.Model):
     ]
     name = models.CharField(max_length=150)
     subject = models.CharField(max_length=100, choices=SUBJECT_CHOICES)
-    role = models.CharField(choices=PROF_ROLE, default="Titular")
+    role = models.CharField(choices=PROF_ROLE, default="Titular", max_length=20)
     class Meta:
         ordering = ["subject", "name"]
 
