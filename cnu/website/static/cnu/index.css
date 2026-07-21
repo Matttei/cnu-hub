@@ -2930,6 +2930,7 @@ font-size: calc(1.5rem * var(--accessibility-font-scale)) !important;
     background-color: #fff6e6;
     padding: 1.5rem;
     border-left: 6px solid #fda085;
+    border-right: 6px solid #fda085;
     border-radius: 12px;
     font-size: 1rem;
 }

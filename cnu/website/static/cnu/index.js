@@ -188,58 +188,46 @@ document.addEventListener('DOMContentLoaded', function () {
         }, index * 100); // 100ms delay per item
     });
 
-        const select = document.getElementById("clasaSelect");
-        const downloadSection = document.getElementById("downloadSection");
-        const downloadLink = document.getElementById("downloadLink");
+const select = document.getElementById("clasaSelect");
+const downloadSection = document.getElementById("downloadSection");
+const downloadLink = document.getElementById("downloadLink");
 
-const bucketUrl = 'https://colegiulunirea-tr.s3.eu-north-1.amazonaws.com';
+const bucketUrl = 'https://pub-a290263926cc4a27ab39db7a085f57b0.r2.dev';
 
 if (select) {
     select.addEventListener("change", function () {
         const clasa = select.value;
 
-        if (clasa) {
-            const fileUrl = `${bucketUrl}/media/orare/${clasa}.pdf`;
-            console.log(fileUrl);
+        downloadSection.classList.add('d-none');
 
-            fetch(fileUrl, { method: 'HEAD' })
-                .then(res => {
-                    if (res.ok) {
-                        downloadLink.href = fileUrl;
-                        downloadSection.classList.remove('d-none');
-                    } else {
-                        downloadSection.classList.add('d-none');
-                        showMessage('⚠️ Orarul pentru această clasă nu a fost găsit sau nu a fost încă adăugat.');
-                    }
-                })
-                .catch(() => {
-                    downloadSection.classList.add('d-none');
-                    showMessage('⚠️ Eroare la verificarea fișierului.');
-                });
-        } else {
-            downloadSection.classList.add('d-none');
+        if (!clasa) {
+            return;
         }
-    });
 
-    downloadLink.addEventListener("click", function (e) {
-        e.preventDefault(); // prevent normal navigation
+        const fileUrl = `${bucketUrl}/media/orare/${clasa}.pdf`;
 
-        const url = downloadLink.href;
-        const clasa = select.value;
+        console.log("Verific URL:", fileUrl);
 
-        fetch(url)
-            .then(resp => resp.blob())
-            .then(blob => {
-                const blobUrl = window.URL.createObjectURL(blob);
-                const tempLink = document.createElement('a');
-                tempLink.href = blobUrl;
-                tempLink.download = `${clasa}.pdf`; // filename for download
-                document.body.appendChild(tempLink);
-                tempLink.click();
-                tempLink.remove();
-                window.URL.revokeObjectURL(blobUrl);
+        fetch(fileUrl)
+            .then(res => {
+                console.log("Status:", res.status);
+
+                if (res.ok) {
+                    downloadLink.href = fileUrl;
+                    downloadSection.classList.remove('d-none');
+                } else {
+                    showMessage(
+                        '⚠️ Orarul pentru această clasă nu a fost găsit sau nu a fost încă adăugat.'
+                    );
+                }
             })
-            .catch(() => showMessage("⚠️ Eroare la descărcarea fișierului."));
+            .catch(error => {
+                console.error("Eroare:", error);
+
+                showMessage(
+                    '⚠️ Eroare la verificarea fișierului.'
+                );
+            });
     });
 }
 });
