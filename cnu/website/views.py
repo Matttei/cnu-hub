@@ -320,11 +320,12 @@ def chatbot_message(request):
 
         response_data = json.loads(response)
 
+        
         session.categorie = response_data["category"]
         session.important = response_data["important"]
         session.titlu = response_data["title"]
         session.email = response_data["email"]
-
+        session.username = response_data["name"]
         session.continut += f"\n\n{response_data['name']}: {data['message']}"
         session.continut += f"\n\nAI: {response_data['answer']}"
 
